@@ -7,13 +7,8 @@
 <title>Ashi Online Shop</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
@@ -29,10 +24,7 @@ header, footer {
     padding: 22px;
 }
 
-h1 {
-    margin: 0;
-    font-size: 30px;
-}
+h1 { margin: 0; font-size: 30px; }
 
 .navbar {
     display: flex;
@@ -49,9 +41,7 @@ h1 {
     border-radius: 8px;
 }
 
-.navbar a:hover {
-    background: #2563eb;
-}
+.navbar a:hover { background: #2563eb; }
 
 main {
     max-width: 1200px;
@@ -107,9 +97,7 @@ main {
     transition: transform 0.3s;
 }
 
-.product:hover {
-    transform: translateY(-5px);
-}
+.product:hover { transform: translateY(-5px); }
 
 .product img {
     width: 100%;
@@ -139,9 +127,7 @@ button {
     margin: 4px;
 }
 
-button:hover {
-    background: #1d4ed8;
-}
+button:hover { background: #1d4ed8; }
 
 .cart-section {
     max-width: 900px;
@@ -164,15 +150,9 @@ button:hover {
     flex-wrap: wrap;
 }
 
-.cart-item .remove {
-    background: #dc2626;
-}
+.cart-item .remove { background: #dc2626; }
+#cartTotal { color: #15803d; }
 
-#cartTotal {
-    color: #15803d;
-}
-
-/* Checkout input styling */
 #checkout input,
 #checkout select {
     display: block;
@@ -186,9 +166,7 @@ button:hover {
     background: white;
 }
 
-#checkout select {
-    cursor: pointer;
-}
+#checkout select { cursor: pointer; }
 
 #paymentNotice {
     max-width: 526px;
@@ -198,22 +176,35 @@ button:hover {
     line-height: 1.6;
 }
 
-.whatsapp-button {
-    background: #15803d;
+.payment-details {
+    max-width: 526px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    text-align: left;
+    overflow-wrap: anywhere;
 }
 
-.whatsapp-button:hover {
-    background: #166534;
+.payment-details h3 {
+    text-align: center;
+    color: #1d4ed8;
 }
 
-footer {
-    margin-top: 30px;
+.payment-warning {
+    font-size: 13px;
+    color: #b91c1c;
+    line-height: 1.6;
 }
+
+.whatsapp-button { background: #15803d; }
+.whatsapp-button:hover { background: #166534; }
+
+footer { margin-top: 30px; }
 
 @media (max-width: 600px) {
-    h1 {
-        font-size: 24px;
-    }
+    h1 { font-size: 24px; }
 
     .cart-section {
         margin: 20px 12px;
@@ -239,55 +230,32 @@ footer {
 
 <main id="productsSection">
     <h2>Our Products</h2>
-
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search products..."
-    >
+    <input type="text" id="searchInput"
+        placeholder="Search products...">
 
     <h3>Shop by Category</h3>
     <div class="category-list" id="categoryList"></div>
-
     <div class="products" id="products"></div>
 </main>
 
 <section id="cart" class="cart-section">
     <h2>🛒 My Shopping Cart</h2>
-
-    <div id="cartItems">
-        <p>Your cart is empty.</p>
-    </div>
-
+    <div id="cartItems"><p>Your cart is empty.</p></div>
     <h3 id="cartTotal">Total: Rs. 0</h3>
 </section>
 
 <section id="checkout" class="cart-section">
     <h2>📦 Delivery Details</h2>
 
-    <input
-        id="customerName"
-        type="text"
-        placeholder="Your Full Name"
-        autocomplete="name"
-        required
-    >
+    <input id="customerName" type="text"
+        placeholder="Your Full Name" autocomplete="name" required>
 
-    <input
-        id="customerAddress"
-        type="text"
+    <input id="customerAddress" type="text"
         placeholder="Your Complete Address"
-        autocomplete="street-address"
-        required
-    >
+        autocomplete="street-address" required>
 
-    <input
-        id="customerPhone"
-        type="tel"
-        placeholder="Your Phone Number"
-        autocomplete="tel"
-        required
-    >
+    <input id="customerPhone" type="tel"
+        placeholder="Your Phone Number" autocomplete="tel" required>
 
     <h3>💳 Select Payment Method</h3>
 
@@ -299,17 +267,35 @@ footer {
 
     <p id="paymentNotice">
         Please select Easypaisa or JazzCash.
-        Payment instructions will need to be confirmed with the shop.
     </p>
+
+    <div id="paymentDetails" class="payment-details" hidden>
+        <h3 id="paymentTitle">Payment Details</h3>
+
+        <p>
+            <strong>Account Title:</strong>
+            <span id="paymentAccountName"></span>
+        </p>
+
+        <p>
+            <strong>Account Number:</strong>
+            <span id="paymentNumber"></span>
+        </p>
+
+        <p id="paymentInstructions"></p>
+
+        <p class="payment-warning">
+            Payment bhejne se pehle account title aur number check karein.
+            Yeh website payment automatically receive ya verify nahi karti.
+            Apni payment ki tasdeeq shop owner se zaroor karwa lein.
+        </p>
+    </div>
 
     <button onclick="placeWebsiteOrder()">
         Submit Website Order
     </button>
 
-    <button
-        class="whatsapp-button"
-        onclick="placeWhatsAppOrder()"
-    >
+    <button class="whatsapp-button" onclick="placeWhatsAppOrder()">
         Order on WhatsApp
     </button>
 
@@ -322,144 +308,122 @@ footer {
 
 <script>
 const categories = [
-    "Women Clothes",
-    "Men Clothes",
-    "Handbags",
-    "Home Appliances",
-    "Cosmetics",
-    "Novels",
-    "Kitchenware",
-    "Fashion Accessories",
-    "Jewelry",
-    "Kids Toys",
-    "Kids Accessories",
-    "Home Decor",
-    "Islamic Accessories",
-    "Electronics"
+    "Women Clothes", "Men Clothes", "Handbags",
+    "Home Appliances", "Cosmetics", "Novels",
+    "Kitchenware", "Fashion Accessories", "Jewelry",
+    "Kids Toys", "Kids Accessories", "Home Decor",
+    "Islamic Accessories", "Electronics"
 ];
 
 const products = [
     {
-        id: 1,
-        name: "Smart Watch",
-        price: 3000,
+        id: 1, name: "Smart Watch", price: 3000,
         image: "images/watch.jpeg",
         category: "Electronics",
         description: "Stylish smart watch"
     },
     {
-        id: 2,
-        name: "Headphones",
-        price: 1800,
+        id: 2, name: "Headphones", price: 1800,
         image: "https://placehold.co/300x200?text=Headphones",
         category: "Electronics",
         description: "Enjoy your favourite music"
     },
     {
-        id: 3,
-        name: "Women's Dress",
-        price: 3200,
+        id: 3, name: "Women's Dress", price: 3200,
         image: "images/women dress.jpeg",
         category: "Women Clothes",
         description: "Elegant everyday dress"
     },
     {
-        id: 4,
-        name: "Men's Shirt",
-        price: 1800,
+        id: 4, name: "Men's Shirt", price: 1800,
         image: "https://placehold.co/300x200?text=Mens+Shirt",
         category: "Men Clothes",
         description: "Comfortable casual shirt"
     },
     {
-        id: 5,
-        name: "Handbag",
-        price: 2200,
+        id: 5, name: "Handbag", price: 2200,
         image: "https://placehold.co/300x200?text=Handbag",
         category: "Handbags",
         description: "Stylish everyday handbag"
     },
     {
-        id: 6,
-        name: "Hand Chopper",
-        price: 1199,
+        id: 6, name: "Hand Chopper", price: 1199,
         image: "images/Home appliance.jpeg",
         category: "Home Appliances",
         description: "Useful kitchen hand chopper"
     },
     {
-        id: 7,
-        name: "Cosmetics Set",
-        price: 600,
+        id: 7, name: "Cosmetics Set", price: 600,
         image: "images/cosmetics sets.jpeg",
         category: "Cosmetics",
         description: "Beauty products set"
     },
     {
-        id: 8,
-        name: "Classic Novel",
-        price: 2199,
+        id: 8, name: "Classic Novel", price: 2199,
         image: "images/Novel.jpeg",
         category: "Novels",
         description: "A novel for reading lovers"
     },
     {
-        id: 9,
-        name: "Kitchen Utensils",
-        price: 1200,
+        id: 9, name: "Kitchen Utensils", price: 1200,
         image: "https://placehold.co/300x200?text=Kitchenware",
         category: "Kitchenware",
         description: "Useful kitchen utensils"
     },
     {
-        id: 10,
-        name: "Fashion Sunglasses",
-        price: 900,
+        id: 10, name: "Fashion Sunglasses", price: 900,
         image: "https://placehold.co/300x200?text=Sunglasses",
         category: "Fashion Accessories",
         description: "Trendy fashion accessory"
     },
     {
-        id: 11,
-        name: "Jewelry Set",
-        price: 1300,
+        id: 11, name: "Jewelry Set", price: 1300,
         image: "https://placehold.co/300x200?text=Jewelry",
         category: "Jewelry",
         description: "Beautiful jewelry set"
     },
     {
-        id: 12,
-        name: "Kids Toy",
-        price: 1000,
+        id: 12, name: "Kids Toy", price: 1000,
         image: "https://placehold.co/300x200?text=Kids+Toy",
         category: "Kids Toys",
         description: "Fun toy for children"
     },
     {
-        id: 13,
-        name: "Decorative Vase",
-        price: 1600,
+        id: 13, name: "Decorative Vase", price: 1600,
         image: "https://placehold.co/300x200?text=Home+Decor",
         category: "Home Decor",
         description: "Decorate your home"
     },
     {
-        id: 14,
-        name: "Prayer Mat",
-        price: 1200,
+        id: 14, name: "Prayer Mat", price: 1200,
         image: "https://placehold.co/300x200?text=Prayer+Mat",
         category: "Islamic Accessories",
         description: "Comfortable prayer mat"
     },
     {
-        id: 15,
-        name: "Kids Accessories",
-        price: 850,
+        id: 15, name: "Kids Accessories", price: 850,
         image: "images/kids accessories.jpeg",
         category: "Kids Accessories",
         description: "Cute accessories for kids"
     }
 ];
+
+/* Payment accounts */
+const paymentAccounts = {
+    Easypaisa: {
+        number: "03182540226",
+        name: "Muhammad Kamran",
+        instructions:
+            "Easypaisa select kiya gaya hai. Payment bhejne se pehle account details verify karein."
+    },
+
+    JazzCash: {
+        number: "03218732782",
+        name: "Muhammad Kamran",
+        instructions:
+            "JazzCash select kiya gaya hai. Payment bhejne se pehle account details verify karein."
+    }
+};
 
 let cart = [];
 let selectedCategory = "All Products";
@@ -469,11 +433,9 @@ function showCategories() {
     const allCategories = ["All Products", ...categories];
 
     container.innerHTML = allCategories.map(category => `
-        <button
-            class="category-button ${
-                selectedCategory === category ? "active" : ""
-            }"
-            onclick="selectCategory(${JSON.stringify(category)})">
+        <button class="category-button ${
+            selectedCategory === category ? "active" : ""
+        }" onclick="selectCategory(${JSON.stringify(category)})">
             ${category}
         </button>
     `).join("");
@@ -495,14 +457,9 @@ function showProducts(searchText = "") {
             product.description
         ).toLowerCase();
 
-        const matchesSearch =
-            text.includes(searchText.toLowerCase());
-
-        const matchesCategory =
-            selectedCategory === "All Products" ||
-            product.category === selectedCategory;
-
-        return matchesSearch && matchesCategory;
+        return text.includes(searchText.toLowerCase()) &&
+            (selectedCategory === "All Products" ||
+             product.category === selectedCategory);
     });
 
     if (filteredProducts.length === 0) {
@@ -516,8 +473,7 @@ function showProducts(searchText = "") {
             <img
                 src="${product.image}"
                 alt="${product.name}"
-                onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Product+Image';"
-            >
+                onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Product+Image';">
 
             <p class="product-category">${product.category}</p>
             <h3>${product.name}</h3>
@@ -543,7 +499,7 @@ function addToCart(id) {
     if (existingItem) {
         existingItem.quantity++;
     } else {
-        cart.push({ ...product, quantity: 1 });
+        cart.push({...product, quantity: 1});
     }
 
     updateCart();
@@ -551,7 +507,6 @@ function addToCart(id) {
 
 function updateCart() {
     const cartItems = document.getElementById("cartItems");
-    const cartTotal = document.getElementById("cartTotal");
 
     if (cart.length === 0) {
         cartItems.innerHTML = "<p>Your cart is empty.</p>";
@@ -567,9 +522,7 @@ function updateCart() {
                     <button onclick="changeQuantity(${index}, -1)">−</button>
                     <strong>${item.quantity}</strong>
                     <button onclick="changeQuantity(${index}, 1)">+</button>
-
-                    <button
-                        class="remove"
+                    <button class="remove"
                         onclick="removeFromCart(${index})">
                         Remove
                     </button>
@@ -579,11 +532,10 @@ function updateCart() {
     }
 
     const total = cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
+        (sum, item) => sum + item.price * item.quantity, 0
     );
 
-    cartTotal.textContent =
+    document.getElementById("cartTotal").textContent =
         "Total: Rs. " + total.toLocaleString("en-PK");
 }
 
@@ -604,22 +556,38 @@ function removeFromCart(index) {
     updateCart();
 }
 
-/* Update the payment instructions shown on the page */
-document.getElementById("paymentMethod")
-    .addEventListener("change", function () {
-        const notice = document.getElementById("paymentNotice");
+function updatePaymentDetails() {
+    const method = document.getElementById("paymentMethod").value;
+    const details = document.getElementById("paymentDetails");
+    const notice = document.getElementById("paymentNotice");
+    const account = paymentAccounts[method];
 
-        if (this.value === "Easypaisa") {
-            notice.textContent =
-                "Easypaisa selected. Confirm the shop's payment details before sending money. This website does not process payments.";
-        } else if (this.value === "JazzCash") {
-            notice.textContent =
-                "JazzCash selected. Confirm the shop's payment details before sending money. This website does not process payments.";
-        } else {
-            notice.textContent =
-                "Please select Easypaisa or JazzCash.";
-        }
-    });
+    if (!account) {
+        details.hidden = true;
+        notice.textContent =
+            "Please select Easypaisa or JazzCash.";
+        return;
+    }
+
+    details.hidden = false;
+
+    document.getElementById("paymentTitle").textContent =
+        method + " Payment Details";
+
+    document.getElementById("paymentAccountName").textContent =
+        account.name;
+
+    document.getElementById("paymentNumber").textContent =
+        account.number;
+
+    document.getElementById("paymentInstructions").textContent =
+        account.instructions;
+
+    notice.textContent = method + " selected.";
+}
+
+document.getElementById("paymentMethod")
+    .addEventListener("change", updatePaymentDetails);
 
 function getOrderDetails() {
     const name =
@@ -651,8 +619,7 @@ function getOrderDetails() {
     }
 
     const total = cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
+        (sum, item) => sum + item.price * item.quantity, 0
     );
 
     const items = cart.map(item =>
@@ -676,14 +643,14 @@ function placeWebsiteOrder() {
     if (!order) return;
 
     document.getElementById("orderMessage").textContent =
-        `Demo order prepared for ${order.name}. ` +
-        `Payment method: ${order.paymentMethod}. ` +
+        `Demo order for ${order.name}. ` +
+        `Payment: ${order.paymentMethod}. ` +
         `Total: Rs. ${order.total.toLocaleString("en-PK")}. ` +
-        `The order has not been saved and payment has not been received.`;
+        "Order has not been saved and payment has not been received.";
 
     alert(
-        "Demo only: the order has not been sent or saved. " +
-        "No payment has been processed."
+        "Demo only: order is not saved and no payment has been processed. " +
+        "Use Order on WhatsApp to send your order details."
     );
 }
 
@@ -691,23 +658,22 @@ function placeWhatsAppOrder() {
     const order = getOrderDetails();
     if (!order) return;
 
-    /*
-      IMPORTANT:
-      Replace this example number with your shop's WhatsApp number.
-      Use country code and digits only, without + or spaces.
-      Example format: 923016755067
-    */
+    /* Shop WhatsApp number from your existing code */
     const shopWhatsAppNumber = "923016755067";
+
+    const account = paymentAccounts[order.paymentMethod];
 
     const message =
         `New Order - Ashi Online Shop\n\n` +
         `Name: ${order.name}\n` +
         `Address: ${order.address}\n` +
-        `Customer Phone: ${order.phone}\n` +
-        `Payment Method: ${order.paymentMethod}\n\n` +
+        `Customer Phone: ${order.phone}\n\n` +
+        `Payment Method: ${order.paymentMethod}\n` +
+        `Account Title: ${account.name}\n` +
+        `Account Number: ${account.number}\n\n` +
         `Products:\n${order.items}\n\n` +
         `Total: Rs. ${order.total.toLocaleString("en-PK")}\n\n` +
-        `Please confirm the payment instructions and order.`;
+        `Please confirm the order and payment.`;
 
     const url =
         "https://wa.me/" + shopWhatsAppNumber +
@@ -717,13 +683,14 @@ function placeWhatsAppOrder() {
 }
 
 document.getElementById("searchInput")
-    .addEventListener("input", function () {
+    .addEventListener("input", function() {
         showProducts(this.value);
     });
 
 showCategories();
 showProducts();
 updateCart();
+updatePaymentDetails();
 </script>
 
 </body>
