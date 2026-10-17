@@ -172,15 +172,30 @@ button:hover {
     color: #15803d;
 }
 
-#checkout input {
+/* Checkout input styling */
+#checkout input,
+#checkout select {
     display: block;
     width: 100%;
-    max-width: 500px;
+    max-width: 526px;
     padding: 13px;
     margin: 12px auto;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     font-size: 16px;
+    background: white;
+}
+
+#checkout select {
+    cursor: pointer;
+}
+
+#paymentNotice {
+    max-width: 526px;
+    margin: 12px auto 20px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .whatsapp-button {
@@ -254,19 +269,38 @@ footer {
         id="customerName"
         type="text"
         placeholder="Your Full Name"
+        autocomplete="name"
+        required
     >
 
     <input
         id="customerAddress"
         type="text"
         placeholder="Your Complete Address"
+        autocomplete="street-address"
+        required
     >
 
     <input
         id="customerPhone"
         type="tel"
         placeholder="Your Phone Number"
+        autocomplete="tel"
+        required
     >
+
+    <h3>💳 Select Payment Method</h3>
+
+    <select id="paymentMethod" required>
+        <option value="">Choose Payment Method</option>
+        <option value="Easypaisa">Easypaisa</option>
+        <option value="JazzCash">JazzCash</option>
+    </select>
+
+    <p id="paymentNotice">
+        Please select Easypaisa or JazzCash.
+        Payment instructions will need to be confirmed with the shop.
+    </p>
 
     <button onclick="placeWebsiteOrder()">
         Submit Website Order
@@ -570,6 +604,23 @@ function removeFromCart(index) {
     updateCart();
 }
 
+/* Update the payment instructions shown on the page */
+document.getElementById("paymentMethod")
+    .addEventListener("change", function () {
+        const notice = document.getElementById("paymentNotice");
+
+        if (this.value === "Easypaisa") {
+            notice.textContent =
+                "Easypaisa selected. Confirm the shop's payment details before sending money. This website does not process payments.";
+        } else if (this.value === "JazzCash") {
+            notice.textContent =
+                "JazzCash selected. Confirm the shop's payment details before sending money. This website does not process payments.";
+        } else {
+            notice.textContent =
+                "Please select Easypaisa or JazzCash.";
+        }
+    });
+
 function getOrderDetails() {
     const name =
         document.getElementById("customerName").value.trim();
@@ -580,8 +631,17 @@ function getOrderDetails() {
     const phone =
         document.getElementById("customerPhone").value.trim();
 
+    const paymentMethod =
+        document.getElementById("paymentMethod").value;
+
     if (!name || !address || !phone) {
         alert("Please fill in your name, address and phone number.");
+        return null;
+    }
+
+    if (!paymentMethod) {
+        alert("Please select Easypaisa or JazzCash.");
+        document.getElementById("paymentMethod").focus();
         return null;
     }
 
@@ -601,7 +661,14 @@ function getOrderDetails() {
         }`
     ).join("\n");
 
-    return { name, address, phone, total, items };
+    return {
+        name,
+        address,
+        phone,
+        paymentMethod,
+        total,
+        items
+    };
 }
 
 function placeWebsiteOrder() {
@@ -609,28 +676,38 @@ function placeWebsiteOrder() {
     if (!order) return;
 
     document.getElementById("orderMessage").textContent =
-        `Demo order prepared for ${order.name}. Total: Rs. ${
-            order.total.toLocaleString("en-PK")
-        }. This order has not been saved.`;
+        `Demo order prepared for ${order.name}. ` +
+        `Payment method: ${order.paymentMethod}. ` +
+        `Total: Rs. ${order.total.toLocaleString("en-PK")}. ` +
+        `The order has not been saved and payment has not been received.`;
 
-    alert("Demo only: your order has not been sent or saved.");
+    alert(
+        "Demo only: the order has not been sent or saved. " +
+        "No payment has been processed."
+    );
 }
 
 function placeWhatsAppOrder() {
     const order = getOrderDetails();
     if (!order) return;
 
-    // Replace this with your real shop WhatsApp number.
-    // Use country code and digits only, without + or spaces.
-    const shopWhatsAppNumber = "923001234567";
+    /*
+      IMPORTANT:
+      Replace this example number with your shop's WhatsApp number.
+      Use country code and digits only, without + or spaces.
+      Example format: 923016755067
+    */
+    const shopWhatsAppNumber = "923016755067";
 
     const message =
         `New Order - Ashi Online Shop\n\n` +
         `Name: ${order.name}\n` +
         `Address: ${order.address}\n` +
-        `Customer Phone: ${order.phone}\n\n` +
+        `Customer Phone: ${order.phone}\n` +
+        `Payment Method: ${order.paymentMethod}\n\n` +
         `Products:\n${order.items}\n\n` +
-        `Total: Rs. ${order.total.toLocaleString("en-PK")}`;
+        `Total: Rs. ${order.total.toLocaleString("en-PK")}\n\n` +
+        `Please confirm the payment instructions and order.`;
 
     const url =
         "https://wa.me/" + shopWhatsAppNumber +
